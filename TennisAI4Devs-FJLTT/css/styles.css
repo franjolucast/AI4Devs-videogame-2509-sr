@@ -1,0 +1,92 @@
+body {
+    background: #1c3b1a;
+    color: white;
+    font-family: system-ui, sans-serif;
+    padding: 20px;
+}
+
+.app-body {
+    background: #1c3b1a;
+    color: #f6e9ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen {
+    width: 100%;
+    max-width: 720px;
+    padding: 24px;
+}
+
+.game-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.panel {
+    background: #284c25;
+    border: 2px solid #f6e9ff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 0 3px #111;
+}
+
+.options-row {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.option-card {
+    flex: 1;
+    border: 2px solid white;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 6px;
+    background: #1f3c1d;
+    user-select: none;
+}
+
+.option-card input {
+    display: none;
+}
+
+
+.option-card.selected {
+    border-color: #ff8bf4;
+    box-shadow: 0 0 0 2px #ff8bf4 inset;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #ff8bf4;
+    color: black;
+    font-size: 1.1rem;
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none;
+}
+
+.buttons-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn.secondary {
+    background: #f6e9ff;
+    color: #2b1230;
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Retro Tennis AI4Devs</title>
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <style>
+        .screen {
+            max-width: 700px;
+            margin: auto;
+        }
+        .field-group {
+            margin: 12px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        input, select {
+            padding: 6px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="app-body">
+
+<!-- ========================================================= -->
+<!-- ===================== PANTALLA HOME ===================== -->
+<!-- ========================================================= -->
+<div id="home-screen" class="screen">
+    <h1 class="game-title">Retro Tennis AI4Devs</h1>
+
+    <section class="panel">
+        <h2>Selecciona dificultad</h2>
+
+        <div class="options-row">
+            <label class="option-card">
+                <input type="radio" name="difficulty" value="junior">
+                <span>Junior<br><small>Básico</small></span>
+            </label>
+
+            <label class="option-card">
+                <input type="radio" name="difficulty" value="challenger">
+                <span>Challenger<br><small>Intermedio</small></span>
+            </label>
+
+            <label class="option-card">
+                <input type="radio" name="difficulty" value="atp">
+                <span>ATP<br><small>Difícil</small></span>
+            </label>
+        </div>
+
+        <button id="go-to-setup" class="btn primary" disabled>
+            Continuar &raquo;
+        </button>
+    </section>
+</div>
+
+<!-- ========================================================= -->
+<!-- =============== PANTALLA DE CONFIGURACIÓN =============== -->
+<!-- ========================================================= -->
+<div id="setup-screen" class="screen hidden">
+    <h1 class="game-title">Configura tu partido</h1>
+
+    <section class="panel">
+
+        <div class="field-group">
+            <label for="player-name">Nombre del jugador</label>
+            <input id="player-name" type="text" placeholder="Tu nombre" />
+        </div>
+
+        <div class="field-group">
+            <label>Superficie</label>
+            <div class="options-row">
+
+                <label class="option-card">
+                    <input type="radio" name="surface" value="clay">
+                    <span>Tierra batida</span>
+                </label>
+
+                <label class="option-card">
+                    <input type="radio" name="surface" value="grass">
+                    <span>Hierba</span>
+                </label>
+
+                <label class="option-card">
+                    <input type="radio" name="surface" value="hard">
+                    <span>Sintética</span>
+                </label>
+
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label for="set-format">Formato de sets</label>
+            <select id="set-format">
+                <option value="1">1 set</option>
+                <option value="3">3 sets</option>
+                <option value="5">5 sets</option>
+            </select>
+        </div>
+
+        <div class="buttons-row">
+            <button id="back-to-home" class="btn secondary">&laquo; Volver</button>
+            <button id="start-match" class="btn primary">Comenzar partido</button>
+        </div>
+
+    </section>
+</div>
+
+<!-- ========================================================= -->
+<!-- ================== SCRIPTS INLINE ======================= -->
+<!-- ========================================================= -->
+<script>
+/* ============================================================
+   ================   STORAGE CONFIG GLOBAL   =================
+   ============================================================ */
+
+window.saveGameConfig = function (config) {
+    try {
+        sessionStorage.setItem("retroTennis_config", JSON.stringify(config));
+    } catch (e) {
+        console.error("ERROR guardando configuración:", e);
+    }
+};
+
+
+/* ============================================================
+   =====================   MAIN MENU   =========================
+   ============================================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const home = document.getElementById("home-screen");
+    const setup = document.getElementById("setup-screen");
+
+    const btnGo = document.getElementById("go-to-setup");
+    const btnBack = document.getElementById("back-to-home");
+    const btnStart = document.getElementById("start-match");
+
+    let selectedDifficulty = null;
+
+    /* ----------- DIFICULTAD ----------- */
+    const diffInputs = document.querySelectorAll('input[name="difficulty"]');
+
+    diffInputs.forEach(input => {
+        const card = input.closest(".option-card");
+        card.addEventListener("click", () => {
+            input.checked = true;
+            selectedDifficulty = input.value;
+
+            btnGo.disabled = false;
+
+            diffInputs.forEach(i =>
+                i.closest(".option-card").classList.remove("selected")
+            );
+            card.classList.add("selected");
+        });
+    });
+
+    btnGo.addEventListener("click", () => {
+        home.classList.add("hidden");
+        setup.classList.remove("hidden");
+    });
+
+
+    /* ----------- SUPERFICIE ----------- */
+    const surfaceInputs = document.querySelectorAll('input[name="surface"]');
+
+    surfaceInputs.forEach(input => {
+        const card = input.closest(".option-card");
+        card.addEventListener("click", () => {
+            input.checked = true;
+
+            surfaceInputs.forEach(i =>
+                i.closest(".option-card").classList.remove("selected")
+            );
+            card.classList.add("selected");
+        });
+    });
+
+
+    /* ----------- VOLVER ----------- */
+    btnBack.addEventListener("click", () => {
+        setup.classList.add("hidden");
+        home.classList.remove("hidden");
+    });
+
+
+    /* ----------- COMENZAR PARTIDO ----------- */
+    btnStart.addEventListener("click", () => {
+
+        const name = document.getElementById("player-name").value.trim() || "Jugador";
+
+        const sets = parseInt(document.getElementById("set-format").value, 10);
+
+        const selectedSurface =
+            [...surfaceInputs].find(s => s.checked)?.value || "grass";
+
+        if (!selectedDifficulty) {
+            alert("Debes elegir una dificultad");
+            return;
+        }
+
+        const config = {
+            playerName: name,
+            surface: selectedSurface,
+            sets,
+            difficulty: selectedDifficulty
+        };
+
+        // Guardar config
+        window.saveGameConfig(config);
+
+        // Ir al juego
+        window.location.href = "game.html";
+    });
+
+});
+</script>
+
+</body>
+</html>
